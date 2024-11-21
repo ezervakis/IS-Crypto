@@ -1,0 +1,43 @@
+plugins {
+    id 'application'
+}
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    // Use JUnit Jupiter for testing.
+    testImplementation 'org.junit.jupiter:junit-jupiter:5.10.0'
+    testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
+
+    // Use Guava (if needed, since it's already in your libs catalog).
+    implementation 'com.google.guava:guava:32.1.2-jre'
+
+    // Add JavaFX dependencies
+    implementation "org.openjfx:javafx-controls:21"
+    implementation "org.openjfx:javafx-fxml:21"
+}
+
+java {
+    toolchain {
+        languageVersion = JavaLanguageVersion.of(21) // Keep your Java 21 toolchain
+    }
+}
+
+application {
+    // Define the main class for the application.
+    mainClass = 'crypto.App'
+}
+
+tasks.named('test') {
+    useJUnitPlatform()
+}
+
+tasks.withType(JavaExec) {
+    // Add JavaFX runtime arguments dynamically
+    jvmArgs = [
+        '--module-path', "${System.getProperty('java.home')}/lib",
+        '--add-modules', 'javafx.controls,javafx.fxml'
+    ]
+}
