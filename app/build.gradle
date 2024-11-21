@@ -17,6 +17,10 @@ dependencies {
     // Add JavaFX dependencies
     implementation "org.openjfx:javafx-controls:21"
     implementation "org.openjfx:javafx-fxml:21"
+
+    // Add BouncyCastle dependencies
+    implementation 'org.bouncycastle:bcprov-jdk18on:1.76' // For cryptographic operations
+    implementation 'org.bouncycastle:bcpkix-jdk18on:1.76' // For key pair and certificate handling
 }
 
 java {

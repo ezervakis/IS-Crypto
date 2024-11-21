@@ -43,3 +43,7 @@ build/                  # Gradle build output directory
 # OS-generated files
 .DS_Store               # macOS file
 Thumbs.db               # Windows file
+*.lock
+*.bin
+/.gradle
+/app/build
