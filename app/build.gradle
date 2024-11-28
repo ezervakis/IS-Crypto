@@ -1,5 +1,6 @@
 plugins {
     id 'application'
+    id 'org.openjfx.javafxplugin' version '0.0.14' // Simplifies JavaFX setup
 }
 
 repositories {
@@ -7,30 +8,34 @@ repositories {
 }
 
 dependencies {
-    // Use JUnit Jupiter for testing.
+    // Testing dependencies
     testImplementation 'org.junit.jupiter:junit-jupiter:5.10.0'
     testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
-
-    // Use Guava (if needed, since it's already in your libs catalog).
-    implementation 'com.google.guava:guava:32.1.2-jre'
 
     // Add JavaFX dependencies
     implementation "org.openjfx:javafx-controls:21"
     implementation "org.openjfx:javafx-fxml:21"
 
     // Add BouncyCastle dependencies
-    implementation 'org.bouncycastle:bcprov-jdk18on:1.76' // For cryptographic operations
-    implementation 'org.bouncycastle:bcpkix-jdk18on:1.76' // For key pair and certificate handling
+    implementation 'org.bouncycastle:bcprov-jdk18on:1.76'
+    implementation 'org.bouncycastle:bcpkix-jdk18on:1.76'
+
+    // Optional: Guava library
+    implementation 'com.google.guava:guava:32.1.2-jre'
 }
 
 java {
     toolchain {
-        languageVersion = JavaLanguageVersion.of(21) // Keep your Java 21 toolchain
+        languageVersion = JavaLanguageVersion.of(21)
     }
 }
 
+javafx {
+    version = "21"
+    modules = [ 'javafx.controls', 'javafx.fxml' ]
+}
+
 application {
-    // Define the main class for the application.
     mainClass = 'crypto.App'
 }
 
@@ -39,9 +44,12 @@ tasks.named('test') {
 }
 
 tasks.withType(JavaExec) {
-    // Add JavaFX runtime arguments dynamically
-    jvmArgs = [
-        '--module-path', "${System.getProperty('java.home')}/lib",
-        '--add-modules', 'javafx.controls,javafx.fxml'
-    ]
+    doFirst {
+        def pathToFx = System.getenv('PATH_TO_FX_') ?: 'C:/Program Files/Java/javafx/javafx-sdk-21.0.5/lib'
+        jvmArgs = [
+            '--module-path', pathToFx,
+            '--add-modules', 'javafx.controls,javafx.fxml'
+        ]
+    }
 }
+
