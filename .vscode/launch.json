@@ -1,0 +1,12 @@
+{
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "type": "java",
+            "name": "Launch App",
+            "request": "launch",
+            "mainClass": "crypto.App",
+            "vmArgs": "--module-path \"C:/Program Files/Java/javafx/javafx-sdk-21.0.5/lib\" --add-modules javafx.controls,javafx.fxml"
+        }
+    ]
+}
