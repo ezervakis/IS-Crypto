@@ -2,8 +2,8 @@ package crypto;
 
 import org.junit.jupiter.api.Test;
 
+import crypto.shared.KeyStoreManager;
 import crypto.symmetric.KeyGeneration;
-import crypto.symmetric.KeyStoreManager;
 
 import javax.crypto.SecretKey;
 
