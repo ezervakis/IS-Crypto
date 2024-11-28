@@ -59,6 +59,17 @@ IS-Crypto is a Java-based cryptographic application that provides functionality 
 
 ---
 
+## **Running the Application**
+1. **Using Gradle**:
+   - Run `./gradlew run` to execute the application.
+
+2. **Using VS-Code**:
+   - Go to `launch.json`.
+   - Go to Line 9 and locate the `module-path`.
+   - Update the path to your JavaFX SDK installation.
+
+---
+
 ## **Project Dependencies**
 The project uses the following dependencies, managed by Gradle:
 - **JUnit 5**: For testing.
