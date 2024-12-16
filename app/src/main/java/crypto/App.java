@@ -5,6 +5,8 @@ import crypto.symmetric.KeyGeneration;
 import crypto.symmetric.SymmetricEncryption;
 import crypto.asymmetric.KeyPairGeneration;
 import crypto.asymmetric.AsymmetricEncryption;
+import crypto.signing.KeyPairManager;
+import crypto.signing.DigitalSignatureManager;
 
 import javafx.application.Application;
 import javafx.geometry.Insets;
@@ -12,14 +14,18 @@ import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.input.TransferMode;
 import javafx.scene.layout.GridPane;
+import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 
 import javax.crypto.SecretKey;
+import java.io.File;
+import java.nio.file.Files;
 import java.security.KeyPair;
 
 public class App extends Application {
     private SecretKey currentSymmetricKey; // Holds the current AES key
     private KeyPair currentRSAKeyPair; // Holds the current RSA key pair
+    private KeyPair currentDSAKeyPair; // Holds the current DSA key pair
 
     public String getStart() {
         return "Application Started";
@@ -52,6 +58,11 @@ public class App extends Application {
         Button encryptAsymmetricButton = new Button("Encrypt (RSA)");
         Button decryptAsymmetricButton = new Button("Decrypt (RSA)");
 
+        // Buttons for Digital Signing
+        Button generateDSAKeyPairButton = new Button("Generate DSA Key Pair");
+        Button signDataButton = new Button("Sign Data");
+        Button verifySignatureButton = new Button("Verify Signature");
+
         // Clear Button
         Button clearButton = new Button("Clear");
 
@@ -66,7 +77,10 @@ public class App extends Application {
         grid.add(generateRSAKeyPairButton, 0, 4);
         grid.add(encryptAsymmetricButton, 1, 4);
         grid.add(decryptAsymmetricButton, 1, 5);
-        grid.add(clearButton, 0, 6); // Add the Clear button
+        grid.add(generateDSAKeyPairButton, 0, 6);
+        grid.add(signDataButton, 1, 6);
+        grid.add(verifySignatureButton, 1, 7);
+        grid.add(clearButton, 0, 8); // Add the Clear button
 
         // Button Actions for Symmetric Encryption
         generateAESKeyButton.setOnAction(event -> {
@@ -163,6 +177,57 @@ public class App extends Application {
                 outputTextArea.setText("Decrypted Text:\n" + plaintext);
             } catch (Exception e) {
                 outputTextArea.setText("Error decrypting text: " + e.getMessage());
+            }
+        });
+
+        // Button Actions for Digital Signing
+        generateDSAKeyPairButton.setOnAction(event -> {
+            try {
+                currentDSAKeyPair = KeyPairManager.generateDSAKeyPair(2048);
+                KeyPairManager.saveKeyPair(currentDSAKeyPair, "dsa_public_key.pem", "dsa_private_key.pem");
+                outputTextArea.setText("DSA Key Pair generated and saved successfully!\nPrivate Key: dsa_private_key.pem\nPublic Key: dsa_public_key.pem");
+            } catch (Exception e) {
+                outputTextArea.setText("Error generating DSA key pair: " + e.getMessage());
+            }
+        });
+
+        signDataButton.setOnAction(event -> {
+            try {
+                if (currentDSAKeyPair == null) {
+                    outputTextArea.setText("Error: No DSA key pair found. Please generate or load a key pair first.");
+                    return;
+                }
+                FileChooser fileChooser = new FileChooser();
+                fileChooser.setTitle("Select File to Sign");
+                File file = fileChooser.showOpenDialog(primaryStage);
+                if (file != null) {
+                    byte[] data = Files.readAllBytes(file.toPath());
+                    byte[] signature = DigitalSignatureManager.signData(data, currentDSAKeyPair.getPrivate());
+                    DigitalSignatureManager.saveSignature(signature, "signature.sig");
+                    outputTextArea.setText("Data signed and signature saved to file.");
+                }
+            } catch (Exception e) {
+                outputTextArea.setText("Error signing data: " + e.getMessage());
+            }
+        });
+
+        verifySignatureButton.setOnAction(event -> {
+            try {
+                if (currentDSAKeyPair == null) {
+                    outputTextArea.setText("Error: No DSA key pair found. Please generate or load a key pair first.");
+                    return;
+                }
+                FileChooser fileChooser = new FileChooser();
+                fileChooser.setTitle("Select File to Verify");
+                File file = fileChooser.showOpenDialog(primaryStage);
+                if (file != null) {
+                    byte[] data = Files.readAllBytes(file.toPath());
+                    byte[] signature = DigitalSignatureManager.loadSignature("signature.sig");
+                    boolean isValid = DigitalSignatureManager.verifySignature(data, signature, currentDSAKeyPair.getPublic());
+                    outputTextArea.setText("Signature is " + (isValid ? "valid" : "invalid") + ".");
+                }
+            } catch (Exception e) {
+                outputTextArea.setText("Error verifying signature: " + e.getMessage());
             }
         });
 
