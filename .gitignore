@@ -1,16 +1,5 @@
-# Compiled class file
+# Java-related ignores
 *.class
-
-# Log file
-*.log
-
-# BlueJ files
-*.ctxt
-
-# Mobile Tools for Java (J2ME)
-.mtj.tmp/
-
-# Package Files #
 *.jar
 *.war
 *.nar
@@ -19,6 +8,42 @@
 *.tar.gz
 *.rar
 
-# virtual machine crash logs, see http://www.java.com/en/download/help/error_hotspot.xml
+# Log files
+*.log
+
+# BlueJ files
+*.ctxt
+
+# Mobile Tools for Java (J2ME)
+.mtj.tmp/
+
+# Virtual machine crash logs
 hs_err_pid*
 replay_pid*
+
+# Gradle-related ignores
+.gradle/                # Gradle project-specific cache directory
+build/                  # Gradle build output directory
+!gradlew                # Do not ignore the Gradle wrapper script
+!gradlew.bat            # Do not ignore the Windows Gradle wrapper script
+!gradle/wrapper/gradle-wrapper.jar # Do not ignore the Gradle wrapper JAR
+!gradle/wrapper/gradle-wrapper.properties # Do not ignore Gradle wrapper properties
+
+# VS Code-specific ignores
+.vscode/                # VS Code workspace settings
+
+# IDE-specific ignores
+*.iml                   # IntelliJ IDEA module files
+.idea/                  # IntelliJ IDEA project settings
+*.project               # Eclipse project settings
+*.classpath             # Eclipse project settings
+*.settings/             # Eclipse specific settings folder
+.metadata/              # Eclipse metadata folder
+
+# OS-generated files
+.DS_Store               # macOS file
+Thumbs.db               # Windows file
+*.lock
+*.bin
+/.gradle
+/app/build
